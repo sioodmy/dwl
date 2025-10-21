@@ -9,7 +9,7 @@
     self,
     nixpkgs,
   }: let
-    system = "x86_64-linux";
+    system = "aarch64-linux";
     pkgs = nixpkgs.legacyPackages.${system};
   in {
     packages.${system}.default = pkgs.stdenv.mkDerivation rec {
