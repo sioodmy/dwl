@@ -140,7 +140,7 @@ struct Client {
 #endif
 	unsigned int bw;
 	uint32_t tags;
-	int isfloating, isurgent, isfullscreen;
+	int isfloating, isurgent, isfullscreen, isfakefullscreen;
 	int isterm, noswallow;
 	uint32_t resize; /* configure serial of a pending resize */
 	pid_t pid;
@@ -373,6 +373,7 @@ static void tile(Monitor *m);
 static void togglebar(const Arg *arg);
 static void togglefloating(const Arg *arg);
 static void togglefullscreen(const Arg *arg);
+static void togglefakefullscreen(const Arg *arg);
 static void toggleswallow(const Arg *arg);
 static void toggleautoswallow(const Arg *arg);
 static void togglegaps(const Arg *arg);
@@ -2196,6 +2197,17 @@ motionnotify(uint32_t time, struct wlr_input_device *device, double dx, double d
 }
 
 void
+setfakefullscreen(Client *c, int fullscreen)
+{
+	c->isfakefullscreen = fullscreen;
+	if (!c->mon)
+		return;
+	if (c->isfullscreen)
+		setfullscreen(c, 0);
+	client_set_fullscreen(c, fullscreen);
+}
+
+void
 motionrelative(struct wl_listener *listener, void *data)
 {
 	/* This event is forwarded by the cursor when a pointer emits a _relative_
@@ -3182,6 +3194,14 @@ void
 toggleautoswallow(const Arg *arg)
 {
 	enableautoswallow = !enableautoswallow;
+}
+
+void
+togglefakefullscreen(const Arg *arg)
+{
+	Client *sel = focustop(selmon);
+	if (sel)
+		setfakefullscreen(sel, !sel->isfakefullscreen);
 }
 
 void
