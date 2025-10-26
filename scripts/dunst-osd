@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+
+VOL="$(wpctl get-volume @DEFAULT_AUDIO_SINK@ | awk '{ print $2*100 }')"
+
+BKL="$(brillo -G)"
+
+case $1 in
+  "vol")
+    case $2 in
+      "up")
+
+      wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.1+
+      ;;
+
+      "down")
+      wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.1-
+      ;;
+
+      "mute")
+      wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle
+      ;;
+      esac
+  dunstify -t 550 -h string:x-canonical-private-synchronous:audio "Volume: " -h int:value:"${VOL}"
+  ;;
+
+  "bkl")
+
+  if [ "$2" = "up" ]; then
+    brillo -q -A 5
+  else
+    brillo -q -U 5
+  fi
+  
+
+  dunstify -t 550 -h string:x-canonical-private-synchronous:audio "Brightness: " -h int:value:"${BKL}"
+
+  ;;
+
+esac

@@ -57,7 +57,7 @@ dwl-ipc-unstable-v2-protocol.c:
 config.h:
 	cp config.def.h $@
 clean:
-	rm -f dwl *.o *-protocol.h
+	rm -f dwl *.o *-protocol.h *.orig *.rej
 
 dist: clean
 	mkdir -p dwl-$(VERSION)
@@ -72,6 +72,8 @@ install: dwl
 	rm -f $(DESTDIR)$(PREFIX)/bin/dwl
 	cp -f dwl $(DESTDIR)$(PREFIX)/bin
 	chmod 755 $(DESTDIR)$(PREFIX)/bin/dwl
+	cp -f scripts/dunst-osd $(DESTDIR)$(PREFIX)/bin
+	chmod 755 $(DESTDIR)$(PREFIX)/bin/dunst-osd
 	mkdir -p $(DESTDIR)$(MANDIR)/man1
 	cp -f dwl.1 $(DESTDIR)$(MANDIR)/man1
 	chmod 644 $(DESTDIR)$(MANDIR)/man1/dwl.1

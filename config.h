@@ -9,15 +9,15 @@ static const int bypass_surface_visibility = 0;  /* 1 means idle inhibitors will
 static const int smartgaps                 = 1;  /* 1 means no outer gap when there is only one window */
 static int gaps                            = 1;  /* 1 means gaps between windows are added */
 static const unsigned int gappx            = 10; /* gap pixel between windows */
-static const unsigned int borderpx         = 1;  /* border pixel of windows */
-static const float rootcolor[]             = COLOR(0x222222ff);
-static const float bordercolor[]           = COLOR(0x444444ff);
-static const float focuscolor[]            = COLOR(0x005577ff);
-static const float urgentcolor[]           = COLOR(0xff0000ff);
+static const unsigned int borderpx         = 3;  /* border pixel of windows */
+static const float rootcolor[]             = COLOR(0x232136ff);
+static const float bordercolor[]           = COLOR(0x6e6a86ff);
+static const float focuscolor[]            = COLOR(0xc4a7e7ff);
+static const float urgentcolor[]           = COLOR(0xeb6f92ff);
 /* This conforms to the xdg-protocol. Set the alpha to zero to restore the old behavior */
 static const float fullscreen_bg[]         = {0.0f, 0.0f, 0.0f, 1.0f}; /* You can also use glsl colors */
 static int enableautoswallow = 1; /* enables autoswallowing newly spawned clients */
-static float swallowborder = 1.0f; /* add this multiplied by borderpx to border when a client is swallowed */
+static float swallowborder = 1.2f; /* add this multiplied by borderpx to border when a client is swallowed */
 static const char *cursor_theme            = "Bibata-Modern-Classic";
 static const char cursor_size[]            = "20"; /* Make sure it's a valid integer, otherwise things will break */
 
@@ -40,7 +40,6 @@ static const Rule rules[] = {
 static const Layout layouts[] = {
 	/* symbol     arrange function */
 	{ "[]=",      tile },
-	{ "><>",      NULL },    /* no layout function means floating behavior */
 	{ "[M]",      monocle },
 	{ NULL,       NULL }, /* terminate */
 };
@@ -67,10 +66,11 @@ static const struct xkb_rule_names xkb_rules = {
 	.options = "ctrl:nocaps",
 	*/
 	.options = "caps:escape",
+	.layout = "pl",
 };
 
 static const int repeat_rate = 50;
-static const int repeat_delay = 200;
+static const int repeat_delay = 150;
 
 /* Trackpad */
 static const int tap_to_click = 1;
@@ -93,7 +93,7 @@ LIBINPUT_CONFIG_CLICK_METHOD_NONE
 LIBINPUT_CONFIG_CLICK_METHOD_BUTTON_AREAS
 LIBINPUT_CONFIG_CLICK_METHOD_CLICKFINGER
 */
-static const enum libinput_config_click_method click_method = LIBINPUT_CONFIG_CLICK_METHOD_BUTTON_AREAS;
+static const enum libinput_config_click_method click_method = LIBINPUT_CONFIG_CLICK_METHOD_CLICKFINGER;
 
 /* You can choose between:
 LIBINPUT_CONFIG_SEND_EVENTS_ENABLED
@@ -130,12 +130,20 @@ static const enum libinput_config_tap_button_map button_map = LIBINPUT_CONFIG_TA
 /* commands */
 static const char *termcmd[] = { "foot", NULL };
 static const char *menucmd[] = { "wmenu-run", NULL };
+static const char *barcmd[] = { "dunst-bar", NULL };
 
 static const Key keys[] = {
 	/* Note that Shift changes certain key codes: c -> C, 2 -> at, etc. */
 	/* modifier                  key                 function        argument */
 	{ MODKEY,                    XKB_KEY_p,          spawn,          {.v = menucmd} },
-	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_Return,     spawn,          {.v = termcmd} },
+	{ MODKEY,                    XKB_KEY_Return,     spawn,          {.v = termcmd} },
+	{ 0,                    XKB_KEY_XF86AudioRaiseVolume,     spawn, SHCMD("dunst-osd vol up") },
+	{ 0,                    XKB_KEY_XF86AudioLowerVolume,     spawn, SHCMD("dunst-osd vol down") },
+	{ 0,                    XKB_KEY_XF86AudioMute,     spawn, SHCMD("dunst-osd vol mute") },
+	{ 0,                    XKB_KEY_XF86MonBrightnessUp,     spawn, SHCMD("dunst-osd bkl up") },
+	{ 0,                    XKB_KEY_XF86MonBrightnessDown,     spawn, SHCMD("dunst-osd bkl down") },
+	{ 0,                    XKB_KEY_XF86Search,     spawn, {.v = barcmd} },
+
 	{ MODKEY,                    XKB_KEY_b,          togglebar,      {0} },
 	{ MODKEY,                    XKB_KEY_j,          focusstack,     {.i = +1} },
 	{ MODKEY,                    XKB_KEY_k,          focusstack,     {.i = -1} },
@@ -146,7 +154,7 @@ static const Key keys[] = {
 	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_H,          setcfact,       {.f = +0.25f} },
 	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_L,          setcfact,       {.f = -0.25f} },
 	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_K,          setcfact,       {.f = 0.0f} },
-	{ MODKEY,                    XKB_KEY_Return,     zoom,           {0} },
+	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_Return,     zoom,           {0} },
 	{ MODKEY,                    XKB_KEY_Tab,        view,           {0} },
 	{ MODKEY,                    XKB_KEY_g,          togglegaps,     {0} },
 	{ MODKEY,                    XKB_KEY_q,          killclient,     {0} },
