@@ -6,3 +6,4 @@ dwl
 *.orig
 *.rej
 *.patch
+result/
