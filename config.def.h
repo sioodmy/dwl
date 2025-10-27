@@ -21,6 +21,8 @@ static float swallowborder = 1.0f; /* add this multiplied by borderpx to border 
 static const char *cursor_theme            = NULL;
 static const char cursor_size[]            = "24"; /* Make sure it's a valid integer, otherwise things will break */
 
+static const unsigned int swipe_min_threshold = 0;
+
 /* tagging - TAGCOUNT must be no greater than 31 */
 #define TAGCOUNT (9)
 
@@ -132,6 +134,8 @@ static const enum libinput_config_tap_button_map button_map = LIBINPUT_CONFIG_TA
 static const char *termcmd[] = { "foot", NULL };
 static const char *menucmd[] = { "wmenu-run", NULL };
 
+#include "shiftview.c"
+
 static const Key keys[] = {
 	/* Note that Shift changes certain key codes: c -> C, 2 -> at, etc. */
 	/* modifier                  key                 function        argument */
@@ -142,6 +146,8 @@ static const Key keys[] = {
 	{ MODKEY,                    XKB_KEY_k,          focusstack,     {.i = -1} },
 	{ MODKEY,                    XKB_KEY_i,          incnmaster,     {.i = +1} },
 	{ MODKEY,                    XKB_KEY_d,          incnmaster,     {.i = -1} },
+	{ MODKEY,                    XKB_KEY_a,          shiftview,      { .i = -1 } },
+	{ MODKEY,                    XKB_KEY_semicolon,  shiftview,      { .i = 1 } },
 	{ MODKEY,                    XKB_KEY_h,          setmfact,       {.f = -0.05f} },
 	{ MODKEY,                    XKB_KEY_l,          setmfact,       {.f = +0.05f} },
 	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_H,          setcfact,       {.f = +0.25f} },
@@ -192,4 +198,11 @@ static const Button buttons[] = {
 	{ MODKEY, BTN_LEFT,   moveresize,     {.ui = CurMove} },
 	{ MODKEY, BTN_MIDDLE, togglefloating, {0} },
 	{ MODKEY, BTN_RIGHT,  moveresize,     {.ui = CurResize} },
+};
+
+static const Gesture gestures[] = {
+	// { MODKEY, SWIPE_LEFT, 4, shiftview, { .i = 1 } },
+	// { MODKEY, SWIPE_RIGHT, 4, shiftview, { .i = -1 } },
+	{ MODKEY, SWIPE_UP, 3, focusstack, {.i = 1} },
+	{ MODKEY, SWIPE_DOWN, 3, focusstack, {.i = -1} },
 };

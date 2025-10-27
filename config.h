@@ -21,6 +21,8 @@ static float swallowborder = 1.2f; /* add this multiplied by borderpx to border 
 static const char *cursor_theme            = "Bibata-Modern-Classic";
 static const char cursor_size[]            = "20"; /* Make sure it's a valid integer, otherwise things will break */
 
+static const unsigned int swipe_min_threshold = 0;
+
 /* tagging - TAGCOUNT must be no greater than 31 */
 #define TAGCOUNT (9)
 
@@ -160,7 +162,6 @@ static const Key keys[] = {
 	{ MODKEY,                    XKB_KEY_q,          killclient,     {0} },
 	{ MODKEY,                    XKB_KEY_t,          setlayout,      {.v = &layouts[0]} },
 	{ MODKEY,                    XKB_KEY_f,          setlayout,      {.v = &layouts[1]} },
-	{ MODKEY,                    XKB_KEY_m,          setlayout,      {.v = &layouts[2]} },
 	{ MODKEY,                    XKB_KEY_space,      nextlayout,    {0} },
 	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_space,      togglefloating, {0} },
 	{ MODKEY,                    XKB_KEY_e,         togglefullscreen, {0} },
@@ -198,4 +199,12 @@ static const Button buttons[] = {
 	{ MODKEY, BTN_LEFT,   moveresize,     {.ui = CurMove} },
 	{ MODKEY, BTN_MIDDLE, togglefloating, {0} },
 	{ MODKEY, BTN_RIGHT,  moveresize,     {.ui = CurResize} },
+};
+
+static const Gesture gestures[] = {
+	// { MODKEY, SWIPE_LEFT, 4, shiftview, { .i = 1 } },
+	// { MODKEY, SWIPE_RIGHT, 4, shiftview, { .i = -1 } },
+	{ 0, SWIPE_LEFT, 3, focusstack, {.i = 1} },
+	{ 0, SWIPE_RIGHT, 3, focusstack, {.i = -1} },
+	{ 0, SWIPE_DOWN, 4, spawn, {.v = barcmd} },
 };
